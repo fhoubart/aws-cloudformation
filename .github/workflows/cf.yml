@@ -20,22 +20,22 @@ on:
 jobs:
 
   # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code from master branch
-        uses: actions/checkout@v2
+  - name: Checkout code from master branch
+    uses: actions/checkout@v2
 
-      # Configure AWS Credential
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-          aws-region: eu-west-3
+  # Configure AWS Credential
+  - name: Configure AWS Credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+      aws-region: eu-west-3
 
-      # Deploy to AWS CloudFormation
-      - name: Deploy to AWS CloudFormation
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: cf1
-          template: cf1/cf1.template.json
-          no-fail-on-empty-changeset: "0"
-          parameter-overrides: "InstanceType=$INSTANCE_TYPE,KeyName=$KEYPAIR_NAME,SSHLocation=$SSH_SOURCE"
+  # Deploy to AWS CloudFormation
+  - name: Deploy to AWS CloudFormation
+    uses: aws-actions/aws-cloudformation-github-deploy@v1
+    with:
+      name: cf1
+      template: cf1/cf1.template.json
+      no-fail-on-empty-changeset: "0"
+      parameter-overrides: "InstanceType=$INSTANCE_TYPE,KeyName=$KEYPAIR_NAME,SSHLocation=$SSH_SOURCE"
