@@ -1,6 +1,9 @@
-# This is a basic workflow to help you get started with Actions
+name: cf
 
-name: CI
+env:
+  KEYPAIR_NAME=lab-keypair
+  INSTANCE_TYPE=t2.micro
+  SSH_SOURCE=0.0.0.0/24
 
 # Controls when the workflow will run
 on:
@@ -15,22 +18,24 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+  # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code from master branch
+        uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      # Deploy to AWS CloudFormation
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: cf1
+          template: cf1/cf1.template.json
+          no-fail-on-empty-changeset: "0"
+          parameter-overrides: "InstanceType=$INSTANCE_TYPE,KeyName=$KEYPAIR_NAME,SSHLocation=$SSH_SOURCE"
