@@ -1,9 +1,9 @@
 name: cf
 
 env:
-  KEYPAIR_NAME=lab-keypair
-  INSTANCE_TYPE=t2.micro
-  SSH_SOURCE=0.0.0.0/24
+  KEYPAIR_NAME: lab-keypair
+  INSTANCE_TYPE: t2.micro
+  SSH_SOURCE: 0.0.0.0/24
 
 # Controls when the workflow will run
 on:
