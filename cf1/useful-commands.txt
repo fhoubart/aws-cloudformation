@@ -1,0 +1,16 @@
+aws cloudformation create-stack --stack-name cf1 --template-body file://cf1.template.json --parameters file://cf1.parameters.json
+
+aws cloudformation update-stack --stack-name cf1 --template-body file://cf1.template.json --parameters file://cf1.parameters.json
+
+
+aws cloudformation describe-stacks --stack-name cf1
+
+aws cloudformation describe-stack-resources  --stack-name cf1 --logical-resource-id WebServerInstance
+
+aws ec2 describe-instances --instance-id i-07b56f20518b0c996
+
+# Se connecter en ssh à un serveur par son id
+ssh -i ../lab-keypair.pem ec2-user@`aws ec2 describe-instances --instance-id i-07f0570a44bf87025 --output text --query 'Reservations[].Instances[0].PublicIpAddress'`
+
+# Se connecter en une seule commande au serveur WebServerInstance de la stack
+ssh -i ../lab-keypair.pem ec2-user@`aws ec2 describe-instances --instance-id $(aws cloudformation describe-stack-resources  --stack-name cf1 --logical-resource-id WebServerInstance --output text --query 'StackResources[0].PhysicalResourceId') --output text --query 'Reservations[].Instances[0].PublicIpAddress'`
