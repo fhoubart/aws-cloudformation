@@ -28,4 +28,4 @@ jobs:
       # Configure AWS Credential
       - name: Deploy stack
         run: |
-          aws cloudformation update-stack --stack-name=cf2 --template-body=file://cf1/cf1.template.json
+          aws cloudformation create-stack --stack-name=cf2 --template-body=file://cf1/cf1.template.json
