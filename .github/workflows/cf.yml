@@ -1,7 +1,7 @@
 name: cf
 
 env:
-  KEYPAIR_NAME: lab-keypair
+  KEYPAIR_NAME: keypair
   INSTANCE_TYPE: t2.micro
   SSH_SOURCE: 0.0.0.0/24
 
