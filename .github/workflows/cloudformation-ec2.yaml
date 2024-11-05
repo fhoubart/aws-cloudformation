@@ -29,10 +29,12 @@ jobs:
       # Configure AWS Credential
       - name: Deploy stack
         run: |
-          if aws cloudformation describe-stacks --stack-name=$STACK_NAME > /dev/null 2>&1; then
-            echo "The stack already exists, update it"
-            aws cloudformation update-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameters=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameters=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
-          else
+          STATUS=`aws cloudformation describe-stacks --stack-name=cf-infras --query "Stacks[0].StackStatus" | tr -d '"'`
+          echo "The stack is in state \"$STATUS\""
+          if [ -z "$STATUS" '||' "$STATUS" eq "CREATE_FAILED"]; then
             echo "The stack does not exists, create it"
             aws cloudformation create-stack --stack-name=$STACK_NAME --disable-rollback --template-body=file://cf1/cf1.template.json --parameters ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE ParameterKey=KeyName,ParameterValue=$lab-keypair ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
+          else
+            echo "The stack already exists, update it"
+            aws cloudformation update-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameters=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameters=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
           fi
