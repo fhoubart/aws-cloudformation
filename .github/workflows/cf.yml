@@ -41,4 +41,4 @@ jobs:
           name: cf1
           template: cf1/cf1.template.json
           no-fail-on-empty-changeset: "0"
-          parameter-overrides: "InstanceType=t2.micro,KeyName=lab-keypair,SSHLocation=0.0.0.0/24"
+          parameter-overrides: "InstanceType=t2.micro,KeyName=${{KEYPAIR_NAME}},SSHLocation=0.0.0.0/24"
