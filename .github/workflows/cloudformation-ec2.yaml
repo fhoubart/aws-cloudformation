@@ -4,6 +4,7 @@ env:
   KEYPAIR_NAME: lab-keypair
   INSTANCE_TYPE: t2.micro
   SSH_SOURCE: 0.0.0.0/24
+  STACK_NAME: cf-infra
 
 # Controls when the workflow will run
 on:
@@ -28,4 +29,10 @@ jobs:
       # Configure AWS Credential
       - name: Deploy stack
         run: |
-          aws cloudformation create-stack --stack-name=cf2 --template-body=file://cf1/cf1.template.json
+          if aws cloudformation describe-stacks --stack-name=$STACK_NAME > /dev/null; then
+            echo "The stack already exists, update it"
+            aws cloudformation update-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameter=ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameter=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameter=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
+          else
+            echo "The stack does not exists, create it"
+            aws cloudformation create-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameter=ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameter=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameter=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
+          fi
