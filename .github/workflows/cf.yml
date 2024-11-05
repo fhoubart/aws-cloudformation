@@ -1,4 +1,4 @@
-pairname: cf
+name: cf
 
 env:
   KEYPAIR_NAME: keypair
