@@ -31,8 +31,8 @@ jobs:
         run: |
           if aws cloudformation describe-stacks --stack-name=$STACK_NAME > /dev/null; then
             echo "The stack already exists, update it"
-            aws cloudformation update-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters=ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameters=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameters=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
+            aws cloudformation update-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE --parameters=ParameterKey=KeyName,ParameterValue=$lab-keypair --parameters=ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
           else
             echo "The stack does not exists, create it"
-            aws cloudformation create-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters=ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE ParameterKey=KeyName,ParameterValue=$lab-keypair ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
+            aws cloudformation create-stack --stack-name=$STACK_NAME --template-body=file://cf1/cf1.template.json --parameters ParameterKey=InstanceType,ParameterValue=$INSTANCE_TYPE ParameterKey=KeyName,ParameterValue=$lab-keypair ParameterKey=SSHLocation,ParameterValue=$SSH_SOURCE
           fi
